@@ -66,62 +66,46 @@ public class ExternalApiFilterRequest extends ExternalApiRequest {
     public int getPage() {
         return page;
     }
-
-    public ExternalApiFilterRequest() {}
+    public ExternalApiFilterRequest(RequestType requestType, Filter filter, String content, int page) {
+        this.requestType = requestType;
+        this.filter = filter;
+        this.content = content;
+        this.page = page < 1 ? 1 : page;
+    }
 
     public static ExternalApiFilterRequest getCRUDrequest(RequestType requestType, Filter filter) throws IllegalArgumentException {
 
         if(requestType != RequestType.CREATE && requestType != RequestType.READ
                 && requestType != RequestType.UPDATE && requestType != RequestType.DELETE){
-            throw new IllegalArgumentException("Invalid request type");
+            throw new IllegalArgumentException();
         }
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = requestType;
-        result.filter = filter;
-        return result;
+        return new ExternalApiFilterRequest(requestType, filter, null, 0);
     }
 
     public static ExternalApiFilterRequest getSearchPublicFilterRequest(String query, int page){
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = RequestType.SEARCH_PUBLIC_FILTER;
-        result.content = query;
-        result.page = page;
-        return result;
+        return new ExternalApiFilterRequest(RequestType.SEARCH_PUBLIC_FILTER, null, query, page);
     }
 
     public static ExternalApiFilterRequest getUnsubscribePublicFilterRequest(String filterId){
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = RequestType.UNSUBSCRIBE;
-        result.content = filterId;
-        return result;
+        return new ExternalApiFilterRequest(RequestType.UNSUBSCRIBE, null, filterId, 0);
     }
 
     public static ExternalApiFilterRequest getSubscribePublicFilterRequest(String filterId){
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = RequestType.SUBSCRIBE;
-        result.content = filterId;
-        return result;
+        return new ExternalApiFilterRequest(RequestType.SUBSCRIBE, null, filterId, 0);
     }
 
     public static ExternalApiFilterRequest getRSSrequest(String filterId){
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = RequestType.GET_RSS;
-        result.content = filterId;
-        return result;
+        return new ExternalApiFilterRequest(RequestType.GET_RSS, null, filterId, 0);
     }
 
     public static ExternalApiFilterRequest getListOfDetections(String filterId, int page){
 
-        ExternalApiFilterRequest result = new ExternalApiFilterRequest();
-        result.requestType = RequestType.LIST_DETECTIONS;
-        result.content = filterId;
-        result.page = page;
-        return result;
+        return new ExternalApiFilterRequest(RequestType.LIST_DETECTIONS, null, filterId, page);
     }
 
     public String getJsonEncode() throws UnsupportedEncodingException {
