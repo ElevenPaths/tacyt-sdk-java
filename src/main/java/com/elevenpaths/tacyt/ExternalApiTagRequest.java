@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class ExternalApiTagRequest extends ExternalApiRequest {
-
-    public static final String FIELD_TAGS = "tags";
+public class ExternalApiTagRequest {
 
     public enum enmRequestType{
         LIST,

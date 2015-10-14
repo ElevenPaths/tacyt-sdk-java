@@ -19,7 +19,7 @@ package com.elevenpaths.tacyt;
 
 import java.io.UnsupportedEncodingException;
 
-public class ExternalApiSearchRequest extends ExternalApiRequest {
+public class ExternalApiSearchRequest {
 
     private String query;
     private int numberPage;

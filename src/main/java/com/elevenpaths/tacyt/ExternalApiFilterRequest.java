@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 
-public class ExternalApiFilterRequest extends ExternalApiRequest {
+public class ExternalApiFilterRequest {
 
     public static final String JSON_FIELD_OPERATION = "operation";
     public static final String JSON_FIELD_DETECTIONS = "detections";

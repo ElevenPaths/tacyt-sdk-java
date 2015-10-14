@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class ExternalApiCompareRequest extends ExternalApiRequest {
+public class ExternalApiCompareRequest {
 
     public final static String FIELD_MATCHING_FIELDS = "matchingFields";
     public final static String FIELD_MATCHING_QUERY = "matchingQuery";
