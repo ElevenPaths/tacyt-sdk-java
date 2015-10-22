@@ -23,6 +23,9 @@ import java.io.UnsupportedEncodingException;
 
 public class ExternalApiFilterRequest {
 
+    private static final int FILTER_MAX_SIZE = 8000;
+    private static final String ERROR_LIMIT_EXCEEDED = "Your filter definition exceeds the size limit of " + FILTER_MAX_SIZE + " characters. Please, shorten the description or split the rules in multiple filters.";
+
     public static final String JSON_FIELD_OPERATION = "operation";
     public static final String JSON_FIELD_DETECTIONS = "detections";
 
@@ -109,7 +112,14 @@ public class ExternalApiFilterRequest {
     }
 
     public String getJsonEncode() throws UnsupportedEncodingException {
-        return new Gson().toJsonTree(this).getAsJsonObject().toString();
+
+        String result = new Gson().toJsonTree(this).getAsJsonObject().toString();
+
+        if(result.length() > ExternalApiFilterRequest.FILTER_MAX_SIZE){
+            throw new RuntimeException(ExternalApiFilterRequest.ERROR_LIMIT_EXCEEDED);
+        }
+
+        return result;
     }
 
 }
