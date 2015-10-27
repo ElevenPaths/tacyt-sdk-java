@@ -17,6 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Filter {
@@ -70,6 +71,7 @@ public class Filter {
     private Visibility visibility = Visibility.getDefault();
     private List<Rule> rules;
     private int numberOfSubscriptions;
+    private List<String> groups = new ArrayList<String>();
 
     public String getId(){
         return id;
@@ -149,22 +151,24 @@ public class Filter {
         this.id = id;
     }
 
-    public Filter(String id, String name, String description, int weight, Visibility visibility, List<Rule> rules) {
+    public Filter(String id, String name, String description, int weight, Visibility visibility, List<Rule> rules, List<String> groups) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.weight = weight;
         this.visibility = visibility;
-        this.rules = rules;
+        this.rules = rules == null ? new ArrayList<Rule>() : rules;
         this.numberOfSubscriptions = 0;
+        this.groups = groups == null ? new ArrayList<String>() : groups;
     }
 
-    public Filter(String name, String description, int weight, Visibility visibility, List<Rule> rules) {
+    public Filter(String name, String description, int weight, Visibility visibility, List<Rule> rules, List<String> groups) {
         this.name = name;
         this.description = description;
         this.weight = weight;
         this.visibility = visibility;
-        this.rules = rules;
+        this.rules = rules == null ? new ArrayList<Rule>() : rules;
         this.numberOfSubscriptions = 0;
+        this.groups = groups == null ? new ArrayList<String>() : groups;
     }
 }
