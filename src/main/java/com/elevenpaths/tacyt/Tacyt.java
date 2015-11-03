@@ -283,6 +283,21 @@ public class Tacyt extends BaseSdk {
      *
      * @return
      */
+    public TacytResponse readGroupFilters(){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroups();
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    /**
+     * Returns all the created filters
+     *
+     * @return
+     */
     public TacytResponse readAllFilters(){
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.READ, null);
         try{
@@ -331,6 +346,22 @@ public class Tacyt extends BaseSdk {
      */
     public TacytResponse listDetectedApps(String filterId, int page){
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfDetections(filterId, page);
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+        }catch (UnsupportedEncodingException e){
+            return null;
+        }
+    }
+
+    /**
+     * List detected apps by a filter group
+     *
+     * @param groupName ID of the filter
+     * @param page Used for pagination, first page is 1
+     * @return
+     */
+    public TacytResponse listGroupDetectedApps(String groupName, int page){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfGroupDetections(groupName, page);
         try{
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
         }catch (UnsupportedEncodingException e){
@@ -392,6 +423,21 @@ public class Tacyt extends BaseSdk {
      */
     public TacytResponse getRSSinfo(String filterId){
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getRSSrequest(filterId);
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+        }catch (UnsupportedEncodingException e){
+            return null;
+        }
+    }
+
+    /**
+     * Returns the info of the RSS given a filter group name
+     *
+     * @param groupName Name of the group
+     * @return
+     */
+    public TacytResponse getGroupRSSinfo(String groupName){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroupRSS(groupName);
         try{
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
         }catch (UnsupportedEncodingException e){
