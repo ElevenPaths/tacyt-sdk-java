@@ -145,6 +145,14 @@ public class Filter {
         this.numberOfSubscriptions = numberOfSubscriptions;
     }
 
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
+
     public Filter() {}
 
     public Filter(String id) {
