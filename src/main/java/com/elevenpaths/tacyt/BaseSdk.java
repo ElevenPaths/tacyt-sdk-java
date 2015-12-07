@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 abstract class BaseSdk {
-    
+
     protected static final String AUTHORIZATION_METHOD = "11PATHS";
     protected static final String AUTHORIZATION_HEADER_FIELD_SEPARATOR = " ";
     protected static final String UTC_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -236,11 +236,19 @@ abstract class BaseSdk {
      *         not supported.
      */
     protected final Map<String, String> authenticationHeadersWithBody(String method, String querystring, Map<String, String> xHeaders, byte[] body, String utc) throws UnsupportedEncodingException {
+
+        HashMap<String, String> headers = new HashMap<String, String>();
+
         String bodyHash = null;
         if (body != null) {
             bodyHash = DigestUtils.shaHex(body);
             if (xHeaders == null) {
                 xHeaders = new HashMap<String, String>();
+
+            } else {
+                for (String header : xHeaders.keySet()) {
+                    headers.put(header, xHeaders.get(header));
+                }
             }
             xHeaders.put(BODY_HASH_HEADER_NAME, bodyHash);
         }
@@ -259,7 +267,6 @@ abstract class BaseSdk {
                 .append(AUTHORIZATION_HEADER_FIELD_SEPARATOR)
                 .append(signedData)
                 .toString();
-        HashMap<String, String> headers = new HashMap<String, String>();
         headers.put(AUTHORIZATION_HEADER_NAME, authorizationHeader);
         headers.put(DATE_HEADER_NAME, utc);
         if (bodyHash != null) {
@@ -279,7 +286,7 @@ abstract class BaseSdk {
             TreeMap<String,String> sortedMap = new TreeMap<String,String>();
             for(String key : xHeaders.keySet()) {
                 if(!key.toLowerCase().startsWith(X_11PATHS_HEADER_PREFIX.toLowerCase())) {
-                    System.out.println("Error serializing headers. Only specific " + X_11PATHS_HEADER_PREFIX + " headers need to be singed");
+                    System.out.println("Error serializing headers. Only specific " + X_11PATHS_HEADER_PREFIX + " headers need to be signed");
                 }
                 sortedMap.put(key.toLowerCase(), xHeaders.get(key));
             }

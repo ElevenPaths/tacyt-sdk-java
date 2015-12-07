@@ -20,12 +20,14 @@ package com.elevenpaths.tacyt;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +35,13 @@ import java.util.Map;
 
 public class Tacyt extends BaseSdk {
 
-    protected static final String API_VERSION = "1.3";
-    protected static final String API_SEARCH_URL = "/api/"+API_VERSION+"/search";
-    protected static final String API_TAGS_URL = "/api/"+API_VERSION+"/tags";
-    protected static final String API_DETAILS_URL = "/api/"+API_VERSION+"/details";
-    protected static final String API_FILTERS_URL = "/api/"+API_VERSION+"/filters";
-    protected static final String API_COMPARER_URL = "/api/"+API_VERSION+"/compare";
+    protected static final String API_VERSION = "1.4";
+    protected static final String API_SEARCH_URL = "/api/" + API_VERSION + "/search";
+    protected static final String API_TAGS_URL = "/api/" + API_VERSION + "/tags";
+    protected static final String API_DETAILS_URL = "/api/" + API_VERSION + "/details";
+    protected static final String API_FILTERS_URL = "/api/" + API_VERSION + "/filters";
+    protected static final String API_COMPARER_URL = "/api/" + API_VERSION + "/compare";
+    protected static final String API_UPLOAD_URL = "/api/" + API_VERSION + "/upload";
 
     /**
      * Create an instance of the class with the Application ID and secret obtained from Eleven Paths
@@ -271,9 +274,24 @@ public class Tacyt extends BaseSdk {
      */
     public TacytResponse updateFilter(Filter filter){
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.UPDATE, filter);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
         }catch (UnsupportedEncodingException e){
+            return null;
+        }
+    }
+
+    /**
+     * Returns all the created filters
+     *
+     * @return
+     */
+    public TacytResponse readGroupFilters(){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroups();
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+
+        } catch (Exception e) {
             return null;
         }
     }
@@ -331,6 +349,22 @@ public class Tacyt extends BaseSdk {
      */
     public TacytResponse listDetectedApps(String filterId, int page){
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfDetections(filterId, page);
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+        }catch (UnsupportedEncodingException e){
+            return null;
+        }
+    }
+
+    /**
+     * List detected apps by a filter group
+     *
+     * @param groupName ID of the filter
+     * @param page Used for pagination, first page is 1
+     * @return
+     */
+    public TacytResponse listGroupDetectedApps(String groupName, int page){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfGroupDetections(groupName, page);
         try{
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
         }catch (UnsupportedEncodingException e){
@@ -400,6 +434,21 @@ public class Tacyt extends BaseSdk {
     }
 
     /**
+     * Returns the info of the RSS given a filter group name
+     *
+     * @param groupName Name of the group
+     * @return
+     */
+    public TacytResponse getGroupRSSinfo(String groupName){
+        ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroupRSS(groupName);
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
+        }catch (UnsupportedEncodingException e){
+            return null;
+        }
+    }
+
+    /**
      * Returns the info of the RSS given a filter
      *
      * @param apps List of apps to compare
@@ -414,4 +463,17 @@ public class Tacyt extends BaseSdk {
             return null;
         }
     }
+
+    public TacytResponse uploadApp(File file){
+        try {
+            Map<String, String> headers = new HashMap<>();
+            headers.put(FILE_HASH_HEADER_NAME, DigestUtils.shaHex(Files.readAllBytes(file.toPath())));
+            return new TacytResponse(HTTP_POST_FILE(API_HOST + API_UPLOAD_URL, authenticationHeadersWithBody(HTTP_METHOD_POST, API_UPLOAD_URL, headers, ""), file));
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
 }

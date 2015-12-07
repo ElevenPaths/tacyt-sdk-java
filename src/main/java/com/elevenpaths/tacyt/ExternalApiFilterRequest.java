@@ -30,6 +30,7 @@ public class ExternalApiFilterRequest {
     public static final String JSON_FIELD_DETECTIONS = "detections";
 
     public static final String FIELD_FILTER = "filter";
+    public static final String FIELD_GROUPS = "groups";
     public static final String FIELD_FILTERS = "filters";
     public static final String FIELD_ID = "id";
     public static final String FIELD_TOTAL_COUNT = "totalCount";
@@ -46,7 +47,10 @@ public class ExternalApiFilterRequest {
         SUBSCRIBE,
         UNSUBSCRIBE,
         GET_RSS,
-        LIST_DETECTIONS
+        LIST_DETECTIONS,
+        READ_GROUPS,
+        LIST_GROUP_DETECTIONS,
+        GET_GROUP_RSS,
     }
 
     private RequestType requestType;
@@ -69,6 +73,7 @@ public class ExternalApiFilterRequest {
     public int getPage() {
         return page;
     }
+
     public ExternalApiFilterRequest(RequestType requestType, Filter filter, String content, int page) {
         this.requestType = requestType;
         this.filter = filter;
@@ -109,6 +114,21 @@ public class ExternalApiFilterRequest {
     public static ExternalApiFilterRequest getListOfDetections(String filterId, int page){
 
         return new ExternalApiFilterRequest(RequestType.LIST_DETECTIONS, null, filterId, page);
+    }
+
+    public static ExternalApiFilterRequest getGroups(){
+
+        return new ExternalApiFilterRequest(RequestType.READ_GROUPS, null, null, 0);
+    }
+
+    public static ExternalApiFilterRequest getListOfGroupDetections(String groupName, int page){
+
+        return new ExternalApiFilterRequest(RequestType.LIST_GROUP_DETECTIONS, null, groupName, page);
+    }
+
+    public static ExternalApiFilterRequest getGroupRSS(String groupName){
+
+        return new ExternalApiFilterRequest(RequestType.GET_GROUP_RSS, null, groupName, 0);
     }
 
     public String getJsonEncode() throws UnsupportedEncodingException {
