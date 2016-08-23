@@ -94,14 +94,22 @@ public class Tacyt extends BaseSdk {
                     os.flush();
                 }
 
-                if (file != null && body == null){
+                if (file != null){
                     String boundary = Long.toHexString(System.currentTimeMillis());
                     String CRLF = "\r\n";
                     theConnection.setDoOutput(true);
                     theConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
                     os = theConnection.getOutputStream();
+
                     PrintWriter writer = new PrintWriter(os, true);
+
+                    if (body != null)
+                    {
+                        writer.append("--" + boundary).append(CRLF);
+                        writer.append("Content-Disposition: form-data; name=\"tagName\"").append(CRLF).append(CRLF);
+                        writer.append(body).append(CRLF);
+                    }
 
                     writer.append("--" + boundary).append(CRLF);
                     writer.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"").append(CRLF);
@@ -464,16 +472,15 @@ public class Tacyt extends BaseSdk {
         }
     }
 
-    public TacytResponse uploadApp(File file){
+    public TacytResponse uploadApp(File file, String tagName){
         try {
             Map<String, String> headers = new HashMap<>();
-            headers.put(FILE_HASH_HEADER_NAME, DigestUtils.shaHex(Files.readAllBytes(file.toPath())));
-            return new TacytResponse(HTTP_POST_FILE(API_HOST + API_UPLOAD_URL, authenticationHeadersWithBody(HTTP_METHOD_POST, API_UPLOAD_URL, headers, ""), file));
+            headers.put(FILE_HASH_HEADER_NAME, DigestUtils.sha1Hex(Files.readAllBytes(file.toPath())));
+            return new TacytResponse(HTTP_POST_FILE(API_HOST + API_UPLOAD_URL, authenticationHeadersWithBody(HTTP_METHOD_POST, API_UPLOAD_URL, headers, ""), file, tagName));
         } catch (UnsupportedEncodingException e) {
             return null;
         } catch (IOException e) {
             return null;
         }
     }
-
 }

@@ -106,8 +106,8 @@ abstract class BaseSdk {
         return HTTP(URL, HTTP_METHOD_POST, headers, body, null);
     }
 
-    protected JsonElement HTTP_POST_FILE(String URL, Map<String, String> headers, File file) {
-        return HTTP(URL, HTTP_METHOD_POST, headers, null, file);
+    protected JsonElement HTTP_POST_FILE(String URL, Map<String, String> headers, File file, String tagName) {
+        return HTTP(URL, HTTP_METHOD_POST, headers, tagName, file);
     }
 
     protected TacytResponse HTTP_GET_proxy(String url) {
