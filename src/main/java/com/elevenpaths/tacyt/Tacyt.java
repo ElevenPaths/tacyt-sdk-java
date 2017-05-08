@@ -50,7 +50,7 @@ public class Tacyt extends BaseSdk {
      */
     public Tacyt(String appId, String secretKey){
         super(appId, secretKey);
-        BaseSdk.API_HOST = "https://path5.11paths.com";
+        BaseSdk.API_HOST = "https://tacyt.elevenpaths.com";
     }
 
 
