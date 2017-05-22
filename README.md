@@ -5,7 +5,7 @@
 
 * Java 1.5 or above.
 
-* Read API documentation (https://path5.elevenpaths.com/help/api).
+* Read API documentation (https://tacyt.elevenpaths.com/help/api).
 
 * To get the "API ID" and "Secret" (fundamental values for integrating Tacyt in any application) it’s necessary to have an account in Tacyt's website.
 
@@ -44,4 +44,4 @@
 
 *A javax.net.ssl.SSLHandshakeException with a nested sun.security.validator.ValidatorException is thrown when invoking an API call.*
 
-This exception is normally thrown when the JDK doesn't trust the CA that signs the digital certificate used in Tacyt's website (https://path5.elevenpaths.com). You may need to install the CA (http://www.startssl.com/certs/ca.pem) as a trusted certificate in your JDK's truststore (normally in jre/lib/security/cacerts) using the keytool utility.
+This exception is normally thrown when the JDK doesn't trust the CA that signs the digital certificate used in Tacyt's website (https://tacyt.elevenpaths.com). You may need to install the CA (http://www.startssl.com/certs/ca.pem) as a trusted certificate in your JDK's truststore (normally in jre/lib/security/cacerts) using the keytool utility.
