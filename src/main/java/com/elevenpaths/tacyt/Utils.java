@@ -55,6 +55,10 @@ public class Utils {
             messageDigest.update(buffer, 0, read);
         }
 
+        if (is != null) {
+            is.close();
+        }
+
         // Convert the byte to hex format
         Formatter formatter = new Formatter();
         for (final byte b : messageDigest.digest()) {
