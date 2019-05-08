@@ -3,6 +3,7 @@ package com.elevenpaths.tacyt;
 import com.google.gson.JsonElement;
 import com.ning.http.util.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -195,7 +196,7 @@ abstract class BaseSdk {
         stringToSign.append("\n");
         stringToSign.append(getSerializedHeaders(xHeaders));
         stringToSign.append("\n");
-        stringToSign.append(queryString.trim());
+        stringToSign.append(sortQueryString(queryString.trim()));
         if (params != null && !params.isEmpty()) {
             String serializedParams = getSerializedParams(params);
             if (serializedParams != null && !serializedParams.isEmpty()) {
@@ -259,7 +260,7 @@ abstract class BaseSdk {
         stringToSign.append("\n");
         stringToSign.append(getSerializedHeaders(xHeaders));
         stringToSign.append("\n");
-        stringToSign.append(querystring.trim());
+        stringToSign.append(sortQueryString(querystring.trim()));
         String signedData = signData(stringToSign.toString());
         String authorizationHeader = new StringBuilder(AUTHORIZATION_METHOD)
                 .append(AUTHORIZATION_HEADER_FIELD_SEPARATOR)
@@ -347,5 +348,23 @@ abstract class BaseSdk {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(new Date());
 
+    }
+
+    private String sortQueryString(String queryString) {
+        if (queryString == null || queryString.isEmpty()) {
+            return "";
+        }
+
+        if (queryString.contains("?")) {
+            String path = queryString.substring(0, queryString.indexOf("?") + 1);
+
+            queryString = queryString.replace(path, "");
+            List<String> params = Arrays.asList(queryString.split(PARAM_SEPARATOR));
+            Collections.sort(params);
+
+            queryString = path + StringUtils.join(params, PARAM_SEPARATOR);
+        }
+
+        return queryString;
     }
 }

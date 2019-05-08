@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,13 +36,14 @@ import java.util.Map;
 
 public class Tacyt extends BaseSdk {
 
-    protected static final String API_VERSION = "1.7";
+    protected static final String API_VERSION = "2.5";
     protected static final String API_SEARCH_URL = "/api/" + API_VERSION + "/search";
     protected static final String API_TAGS_URL = "/api/" + API_VERSION + "/tags";
     protected static final String API_DETAILS_URL = "/api/" + API_VERSION + "/details";
     protected static final String API_FILTERS_URL = "/api/" + API_VERSION + "/filters";
     protected static final String API_COMPARER_URL = "/api/" + API_VERSION + "/compare";
     protected static final String API_UPLOAD_URL = "/api/" + API_VERSION + "/upload";
+    protected static final String API_ENGINE_VERSION_URL = "/api/" + API_VERSION + "/engineVersion";
 
     /**
      * Create an instance of the class with the Application ID and secret obtained from Eleven Paths
@@ -482,5 +484,38 @@ public class Tacyt extends BaseSdk {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    /**
+     * Search an engine and its associated vulnerabilities. If no params return a list of all existing engines
+     * @param engineId engine id.
+     * @param date search the engine available on that date
+     * @param lang output language of vulnerabilities fields. Values "es" or "en"
+     * @return
+     */
+    public TacytResponse getEngineVersion(String engineId, String date, String lang) {
+
+        StringBuilder searchQuery = new StringBuilder(API_ENGINE_VERSION_URL);
+
+        int numParams = 0;
+
+        try {
+            if (engineId != null && !engineId.isEmpty()) {
+                searchQuery.append((numParams > 0) ? "&" : "?").append("engineId=").append(URLEncoder.encode(engineId, "UTF-8"));
+                numParams++;
+            }
+            if (date != null && !date.isEmpty()) {
+                searchQuery.append((numParams > 0) ? "&" : "?").append("date=").append(URLEncoder.encode(date, "UTF-8"));
+                numParams++;
+            }
+            if (lang != null && !lang.isEmpty()) {
+                searchQuery.append((numParams > 0) ? "&" : "?").append("lang=").append(lang);
+                numParams++;
+            }
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+
+        return HTTP_GET_proxy(searchQuery.toString());
     }
 }
