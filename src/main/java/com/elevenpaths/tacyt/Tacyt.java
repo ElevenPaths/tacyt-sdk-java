@@ -28,15 +28,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Tacyt extends BaseSdk {
 
-    protected static final String API_VERSION = "2.5";
+    protected static final String API_VERSION = "2.6";
     protected static final String API_SEARCH_URL = "/api/" + API_VERSION + "/search";
     protected static final String API_TAGS_URL = "/api/" + API_VERSION + "/tags";
     protected static final String API_DETAILS_URL = "/api/" + API_VERSION + "/details";
@@ -44,6 +41,7 @@ public class Tacyt extends BaseSdk {
     protected static final String API_COMPARER_URL = "/api/" + API_VERSION + "/compare";
     protected static final String API_UPLOAD_URL = "/api/" + API_VERSION + "/upload";
     protected static final String API_ENGINE_VERSION_URL = "/api/" + API_VERSION + "/engineVersion";
+    protected static final String API_UPLOADURL_URL = "/api/" + API_VERSION + "/uploadURL";
 
     /**
      * Create an instance of the class with the Application ID and secret obtained from Eleven Paths
@@ -517,5 +515,21 @@ public class Tacyt extends BaseSdk {
         }
 
         return HTTP_GET_proxy(searchQuery.toString());
+    }
+
+    /**
+     * Upload and analyze vulnerabilities and behaviors immediately of applications list. Urls must be Google Play or Apple Store links
+     *
+     * @param urls List of urls to upload
+     * @param tagNames List of tags to identify the application
+     * @return
+     */
+    public TacytResponse uploadURL(Set<String> urls, Set<String> tagNames){
+        ExternalApiUploadURLRequest result = new ExternalApiUploadURLRequest(urls, tagNames);
+        try{
+            return HTTP_POST_proxy(new StringBuilder(API_UPLOADURL_URL).toString(), result.getJsonEncode());
+        }catch (UnsupportedEncodingException e){
+            return null;
+        }
     }
 }
