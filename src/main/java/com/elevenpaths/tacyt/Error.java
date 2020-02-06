@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -14,7 +14,6 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
-
 
 package com.elevenpaths.tacyt;
 
@@ -39,7 +38,6 @@ public class Error {
     }
 
     /**
-     *
      * @return a JsonObject with the code and message of the error
      */
     public JsonObject toJson() {

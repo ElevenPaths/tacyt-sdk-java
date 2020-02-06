@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
-
 package com.elevenpaths.tacyt;
 
 import com.google.gson.JsonElement;
@@ -33,7 +32,7 @@ import java.util.*;
 
 public class Tacyt extends BaseSdk {
 
-    protected static final String API_VERSION = "2.6";
+    protected static final String API_VERSION = "2.7";
     protected static final String API_SEARCH_URL = "/api/" + API_VERSION + "/search";
     protected static final String API_TAGS_URL = "/api/" + API_VERSION + "/tags";
     protected static final String API_DETAILS_URL = "/api/" + API_VERSION + "/details";
@@ -42,13 +41,15 @@ public class Tacyt extends BaseSdk {
     protected static final String API_UPLOAD_URL = "/api/" + API_VERSION + "/upload";
     protected static final String API_ENGINE_VERSION_URL = "/api/" + API_VERSION + "/engineVersion";
     protected static final String API_UPLOADURL_URL = "/api/" + API_VERSION + "/uploadURL";
+    protected static final String API_APPLICATION = "/api/" + API_VERSION + "/app";
 
     /**
      * Create an instance of the class with the Application ID and secret obtained from Eleven Paths
+     *
      * @param appId
      * @param secretKey
      */
-    public Tacyt(String appId, String secretKey){
+    public Tacyt(String appId, String secretKey) {
         super(appId, secretKey);
         BaseSdk.API_HOST = "https://tacyt.elevenpaths.com";
     }
@@ -56,10 +57,11 @@ public class Tacyt extends BaseSdk {
 
     /**
      * Makes an HTTP request
-     * @param URL The request URL.
-     * @param method The request method.
+     *
+     * @param URL     The request URL.
+     * @param method  The request method.
      * @param headers Headers to add to the HTTP request.
-     * @param body The HTTP request body.
+     * @param body    The HTTP request body.
      * @return The server's JSON response or null if something has gone wrong.
      */
     protected JsonElement HTTP(String URL, String method, Map<String, String> headers, String body, File file) {
@@ -94,7 +96,7 @@ public class Tacyt extends BaseSdk {
                     os.flush();
                 }
 
-                if (file != null){
+                if (file != null) {
                     String boundary = Long.toHexString(System.currentTimeMillis());
                     String CRLF = "\r\n";
                     theConnection.setDoOutput(true);
@@ -104,8 +106,7 @@ public class Tacyt extends BaseSdk {
 
                     PrintWriter writer = new PrintWriter(os, true);
 
-                    if (body != null)
-                    {
+                    if (body != null) {
                         writer.append("--" + boundary).append(CRLF);
                         writer.append("Content-Disposition: form-data; name=\"tagName\"").append(CRLF).append(CRLF);
                         writer.append(body).append(CRLF);
@@ -174,6 +175,7 @@ public class Tacyt extends BaseSdk {
 
     /**
      * Get all the details for an app: files, images and comments
+     *
      * @param appKey The value returned by a generic search response for an app, for example: com.elevenpaths.android11GooglePlay
      * @return TacytResponse object with the json of all the details of the app
      */
@@ -184,14 +186,14 @@ public class Tacyt extends BaseSdk {
     /**
      * Perform a generic search to Tacyt
      *
-     * @param query The query as a json string for the search. Please visit Tacyt website for reference and examples.
+     * @param query      The query as a json string for the search. Please visit Tacyt website for reference and examples.
      * @param numberPage A number greater or equal to 1 indicating the page of results which have to be retrieved.
      * @param maxResults A number between 1 and 100 indicating the max number of apps which have to be retrieved.
      * @return
      */
-    public TacytResponse searchApps(String query, int numberPage, int maxResults, String[] outputFields, boolean grouped){
-        ExternalApiSearchRequest searchQuery = new ExternalApiSearchRequest(query,numberPage,maxResults, outputFields, grouped);
-        try{
+    public TacytResponse searchApps(String query, int numberPage, int maxResults, String[] outputFields, boolean grouped) {
+        ExternalApiSearchRequest searchQuery = new ExternalApiSearchRequest(query, numberPage, maxResults, outputFields, grouped);
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_SEARCH_URL).toString(), searchQuery.getJsonEncode());
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -203,9 +205,9 @@ public class Tacyt extends BaseSdk {
      *
      * @return
      */
-    public TacytResponse listTags(){
+    public TacytResponse listTags() {
         ExternalApiTagRequest tagRequest = ExternalApiTagRequest.list();
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_TAGS_URL).toString(), tagRequest.getJsonEncode());
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -215,13 +217,13 @@ public class Tacyt extends BaseSdk {
     /**
      * Assign the tag passed as parameter to an app or set of apps
      *
-     * @param tag Name of the tag to assign to the apps
+     * @param tag     Name of the tag to assign to the apps
      * @param appKeys Set of apps to apply the tag
      * @return
      */
-    public TacytResponse assignTag(String tag, List<String> appKeys){
+    public TacytResponse assignTag(String tag, List<String> appKeys) {
         ExternalApiTagRequest tagRequest = ExternalApiTagRequest.assignTag(tag, appKeys);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_TAGS_URL).toString(), tagRequest.getJsonEncode());
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -231,13 +233,13 @@ public class Tacyt extends BaseSdk {
     /**
      * Remove the tag passed as parameter to an app or set of apps
      *
-     * @param tag Name of the tag to remove
+     * @param tag     Name of the tag to remove
      * @param appKeys Set of apps to remove the tag
      * @return
      */
-    public TacytResponse removeTagForApps(String tag, List<String> appKeys){
+    public TacytResponse removeTagForApps(String tag, List<String> appKeys) {
         ExternalApiTagRequest tagRequest = ExternalApiTagRequest.removeTagFromApp(tag, appKeys);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_TAGS_URL).toString(), tagRequest.getJsonEncode());
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -250,9 +252,9 @@ public class Tacyt extends BaseSdk {
      * @param tag Name of the tag to remove
      * @return
      */
-    public TacytResponse deleteTag(String tag){
+    public TacytResponse deleteTag(String tag) {
         ExternalApiTagRequest tagRequest = ExternalApiTagRequest.removeTag(tag);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_TAGS_URL).toString(), tagRequest.getJsonEncode());
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -280,11 +282,11 @@ public class Tacyt extends BaseSdk {
      * @param filter
      * @return
      */
-    public TacytResponse updateFilter(Filter filter){
+    public TacytResponse updateFilter(Filter filter) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.UPDATE, filter);
         try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -294,11 +296,10 @@ public class Tacyt extends BaseSdk {
      *
      * @return
      */
-    public TacytResponse readGroupFilters(){
+    public TacytResponse readGroupFilters() {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroups();
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-
         } catch (Exception e) {
             return null;
         }
@@ -309,12 +310,11 @@ public class Tacyt extends BaseSdk {
      *
      * @return
      */
-    public TacytResponse readAllFilters(){
+    public TacytResponse readAllFilters() {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.READ, null);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -325,11 +325,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse readOneFilter(String filterId){
+    public TacytResponse readOneFilter(String filterId) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.READ, new Filter(filterId));
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -340,11 +340,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse deleteFilter(String filterId){
+    public TacytResponse deleteFilter(String filterId) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getCRUDrequest(ExternalApiFilterRequest.RequestType.DELETE, new Filter(filterId));
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -355,11 +355,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse listDetectedApps(String filterId, int page){
+    public TacytResponse listDetectedApps(String filterId, int page) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfDetections(filterId, page);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -368,14 +368,14 @@ public class Tacyt extends BaseSdk {
      * List detected apps by a filter group
      *
      * @param groupName ID of the filter
-     * @param page Used for pagination, first page is 1
+     * @param page      Used for pagination, first page is 1
      * @return
      */
-    public TacytResponse listGroupDetectedApps(String groupName, int page){
+    public TacytResponse listGroupDetectedApps(String groupName, int page) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getListOfGroupDetections(groupName, page);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -384,14 +384,14 @@ public class Tacyt extends BaseSdk {
      * Search by public filters defined by other users of the system
      *
      * @param query Content to look for in the public filters
-     * @param page Used for pagination, first page is 1
+     * @param page  Used for pagination, first page is 1
      * @return
      */
-    public TacytResponse searchPublicFilter(String query, int page){
+    public TacytResponse searchPublicFilter(String query, int page) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getSearchPublicFilterRequest(query, page);
         try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -402,11 +402,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse unsubscribePublicFilter(String filterId){
+    public TacytResponse unsubscribePublicFilter(String filterId) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getUnsubscribePublicFilterRequest(filterId);
         try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -417,11 +417,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse subscribePublicFilter(String filterId){
+    public TacytResponse subscribePublicFilter(String filterId) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getSubscribePublicFilterRequest(filterId);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -432,11 +432,11 @@ public class Tacyt extends BaseSdk {
      * @param filterId ID of the filter
      * @return
      */
-    public TacytResponse getRSSinfo(String filterId){
+    public TacytResponse getRSSinfo(String filterId) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getRSSrequest(filterId);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -447,11 +447,11 @@ public class Tacyt extends BaseSdk {
      * @param groupName Name of the group
      * @return
      */
-    public TacytResponse getGroupRSSinfo(String groupName){
+    public TacytResponse getGroupRSSinfo(String groupName) {
         ExternalApiFilterRequest result = ExternalApiFilterRequest.getGroupRSS(groupName);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_FILTERS_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -459,20 +459,20 @@ public class Tacyt extends BaseSdk {
     /**
      * Returns the info of the RSS given a filter
      *
-     * @param apps List of apps to compare
+     * @param apps           List of apps to compare
      * @param includeDetails TRUE if you want to include the details of the compared apps in the result
      * @return
      */
-    public TacytResponse compareApps(List<String> apps, boolean includeDetails){
+    public TacytResponse compareApps(List<String> apps, boolean includeDetails) {
         ExternalApiCompareRequest result = new ExternalApiCompareRequest(apps, includeDetails);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_COMPARER_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
 
-    public TacytResponse uploadApp(File file, String tagName){
+    public TacytResponse uploadApp(File file, String tagName) {
         try {
             Map<String, String> headers = new HashMap<>();
             headers.put(FILE_HASH_HEADER_NAME, DigestUtils.sha1Hex(Files.readAllBytes(file.toPath())));
@@ -486,9 +486,10 @@ public class Tacyt extends BaseSdk {
 
     /**
      * Search an engine and its associated vulnerabilities. If no params return a list of all existing engines
+     *
      * @param engineId engine id.
-     * @param date search the engine available on that date
-     * @param lang output language of vulnerabilities fields. Values "es" or "en"
+     * @param date     search the engine available on that date
+     * @param lang     output language of vulnerabilities fields. Values "es" or "en"
      * @return
      */
     public TacytResponse getEngineVersion(String engineId, String date, String lang) {
@@ -520,15 +521,43 @@ public class Tacyt extends BaseSdk {
     /**
      * Upload and analyze vulnerabilities and behaviors immediately of applications list. Urls must be Google Play or Apple Store links
      *
-     * @param urls List of urls to upload
+     * @param urls     List of urls to upload
      * @param tagNames List of tags to identify the application
      * @return
      */
-    public TacytResponse uploadURL(Set<String> urls, Set<String> tagNames){
+    public TacytResponse uploadURL(Set<String> urls, Set<String> tagNames) {
         ExternalApiUploadURLRequest result = new ExternalApiUploadURLRequest(urls, tagNames);
-        try{
+        try {
             return HTTP_POST_proxy(new StringBuilder(API_UPLOADURL_URL).toString(), result.getJsonEncode());
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Add the metadata of an application
+     *
+     * @param application Object with all fields of the new application
+     * @return
+     */
+    public TacytResponse addApplication(ExternalApiAplicationRequest application) {
+        try {
+            return HTTP_POST_proxy(new StringBuilder(API_APPLICATION).toString(), application.getJsonEncode());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Update the metadata of an application
+     *
+     * @param application Object with all fields of the application to be modified
+     * @return
+     */
+    public TacytResponse updateApplication(ExternalApiAplicationRequest application) {
+        try {
+            return HTTP_PUT_proxy(new StringBuilder(API_APPLICATION).toString(), application.getJsonEncode());
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }

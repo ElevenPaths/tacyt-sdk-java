@@ -1,3 +1,20 @@
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
+Copyright (C) 2013 Eleven Paths
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
+
 package com.elevenpaths.tacyt;
 
 import com.google.gson.JsonElement;
@@ -26,9 +43,9 @@ abstract class BaseSdk {
     protected static final String HTTP_METHOD_POST = "POST";
     protected static final String HTTP_METHOD_PUT = "PUT";
     protected static final String HTTP_METHOD_DELETE = "DELETE";
-    protected static final String HTTP_HEADER_CONTENT_LENGTH  = "Content-Length";
-    protected static final String HTTP_HEADER_CONTENT_TYPE  = "Content-Type";
-    protected static final String HTTP_HEADER_CONTENT_TYPE_FORM_URLENCODED  = "application/x-www-form-urlencoded";
+    protected static final String HTTP_HEADER_CONTENT_LENGTH = "Content-Length";
+    protected static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
+    protected static final String HTTP_HEADER_CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
     protected static final String HTTP_HEADER_CONTENT_TYPE_JSON = "application/json";
     protected static final String PARAM_SEPARATOR = "&";
     protected static final String PARAM_VALUE_SEPARATOR = "=";
@@ -58,14 +75,15 @@ abstract class BaseSdk {
     /**
      * The custom header consists of three parts, the method, the appId and the signature
      * This method returns the specified part if it exists.
-     * @param part The zero indexed part to be returned
+     *
+     * @param part   The zero indexed part to be returned
      * @param header The HTTP header value from which to extract the part
      * @return the specified part from the header or an empty string if not existent
      */
     protected static final String getPartFromHeader(int part, String header) {
         if (header != null) {
             String[] parts = header.split(AUTHORIZATION_HEADER_FIELD_SEPARATOR);
-            if(parts.length > part) {
+            if (parts.length > part) {
                 return parts[part];
             }
         }
@@ -73,7 +91,6 @@ abstract class BaseSdk {
     }
 
     /**
-     *
      * @param authorizationHeader Authorization HTTP Header
      * @return the Authorization method. Typical values are "Basic", "Digest" or "11PATHS"
      */
@@ -82,7 +99,6 @@ abstract class BaseSdk {
     }
 
     /**
-     *
      * @param authorizationHeader Authorization HTTP Header
      * @return the requesting application Id. Identifies the application using the API
      */
@@ -91,7 +107,6 @@ abstract class BaseSdk {
     }
 
     /**
-     *
      * @param authorizationHeader Authorization HTTP Header
      * @return the signature of the current request. Verifies the identity of the application using the API
      */
@@ -107,6 +122,10 @@ abstract class BaseSdk {
         return HTTP(URL, HTTP_METHOD_POST, headers, body, null);
     }
 
+    protected JsonElement HTTP_PUT(String URL, Map<String, String> headers, String body) {
+        return HTTP(URL, HTTP_METHOD_PUT, headers, body, null);
+    }
+
     protected JsonElement HTTP_POST_FILE(String URL, Map<String, String> headers, File file, String tagName) {
         return HTTP(URL, HTTP_METHOD_POST, headers, tagName, file);
     }
@@ -119,24 +138,23 @@ abstract class BaseSdk {
         }
     }
 
-    protected TacytResponse HTTP_POST_proxy(String url){
+    protected TacytResponse HTTP_POST_proxy(String url) throws UnsupportedEncodingException {
         return HTTP_POST_proxy(url, "");
     }
 
-    protected TacytResponse HTTP_POST_proxy(String url, String body) {
-        try {
-            return new TacytResponse(HTTP_POST(API_HOST + url, authenticationHeadersWithBody(HTTP_METHOD_POST, url, null, body), body));
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+    protected TacytResponse HTTP_POST_proxy(String url, String body) throws UnsupportedEncodingException {
+        return new TacytResponse(HTTP_POST(API_HOST + url, authenticationHeadersWithBody(HTTP_METHOD_POST, url, null, body), body));
+    }
+
+    protected TacytResponse HTTP_PUT_proxy(String url, String body) throws UnsupportedEncodingException {
+        return new TacytResponse(HTTP_PUT(API_HOST + url, authenticationHeadersWithBody(HTTP_METHOD_PUT, url, null, body), body));
     }
 
     /**
-     *
      * @param data the string to sign
      * @return base64 encoding of the HMAC-SHA1 hash of the data parameter using {@code secretKey} as cipher key.
      */
-    protected String signData (String data) {
+    protected String signData(String data) {
         try {
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), HMAC_ALGORITHM);
             Mac mac = Mac.getInstance(HMAC_ALGORITHM);
@@ -153,19 +171,20 @@ abstract class BaseSdk {
      * <p>
      * Calls {@link #authenticationHeaders(String, String, Map, Map, String)}
      * with the current date as {@code utc}.
-     * @param method The HTTP request method.
+     *
+     * @param method      The HTTP request method.
      * @param querystring The urlencoded string including the path (from the
-     *        first forward slash) and the parameters.
-     * @param xHeaders The HTTP request headers specific to the API, excluding
-     *        X-11Paths-Date. null if not needed.
-     * @param params The HTTP request params. Must be only those to be sent in
-     *        the body of the request and must be urldecoded. null if not
-     *        needed.
+     *                    first forward slash) and the parameters.
+     * @param xHeaders    The HTTP request headers specific to the API, excluding
+     *                    X-11Paths-Date. null if not needed.
+     * @param params      The HTTP request params. Must be only those to be sent in
+     *                    the body of the request and must be urldecoded. null if not
+     *                    needed.
      * @return A map with the {@value AUTHORIZATION_HEADER_NAME} and {@value
-     *         DATE_HEADER_NAME} headers needed to be sent with a request to the
-     *         API.
+     * DATE_HEADER_NAME} headers needed to be sent with a request to the
+     * API.
      * @throws UnsupportedEncodingException If {@value CHARSET_UTF_8} charset is
-     *         not supported.
+     *                                      not supported.
      */
     protected final Map<String, String> authenticationHeaders(String method, String querystring, Map<String, String> xHeaders, Map<String, String> params) throws UnsupportedEncodingException {
         return authenticationHeaders(method, querystring, xHeaders, params, getCurrentUTC());
@@ -178,17 +197,17 @@ abstract class BaseSdk {
     }
 
     /**
-     *
      * Calculate the authentication headers to be sent with a request to the API
-     * @param HTTPMethod the HTTP Method
+     *
+     * @param HTTPMethod  the HTTP Method
      * @param queryString the urlencoded string including the path (from the first forward slash) and the parameters
-     * @param xHeaders HTTP headers specific to the 11-paths API, excluding X-11Paths-Date. null if not needed.
-     * @param params The HTTP request params. Must be only those to be sent in the body of the request and must be urldecoded. null if not needed.
-     * @param utc the Universal Coordinated Time for the X-11Paths-Date HTTP header
+     * @param xHeaders    HTTP headers specific to the 11-paths API, excluding X-11Paths-Date. null if not needed.
+     * @param params      The HTTP request params. Must be only those to be sent in the body of the request and must be urldecoded. null if not needed.
+     * @param utc         the Universal Coordinated Time for the X-11Paths-Date HTTP header
      * @return a map with the Authorization and X-11Paths-Date headers needed to sign a Path5 API request
      * @throws java.io.UnsupportedEncodingException If {@value CHARSET_UTF_8} charset is not supported.
      */
-    protected final Map<String, String> authenticationHeaders(String HTTPMethod, String queryString, Map<String,String>xHeaders, Map<String, String> params, String utc) throws UnsupportedEncodingException {
+    protected final Map<String, String> authenticationHeaders(String HTTPMethod, String queryString, Map<String, String> xHeaders, Map<String, String> params, String utc) throws UnsupportedEncodingException {
         StringBuilder stringToSign = new StringBuilder();
         stringToSign.append(HTTPMethod.toUpperCase().trim());
         stringToSign.append("\n");
@@ -222,19 +241,20 @@ abstract class BaseSdk {
     /**
      * Calculates the headers to be sent with a request to the API so the server
      * can verify the signature
-     * @param method The HTTP request method.
+     *
+     * @param method      The HTTP request method.
      * @param querystring The urlencoded string including the path (from the
-     *        first forward slash) and the parameters.
-     * @param xHeaders The HTTP request headers specific to the API, excluding
-     *        X-11Paths-Date. null if not needed.
-     * @param body The HTTP request body. Null if not needed.
-     * @param utc the Universal Coordinated Time for the X-11Paths-Date HTTP
-     *        header
+     *                    first forward slash) and the parameters.
+     * @param xHeaders    The HTTP request headers specific to the API, excluding
+     *                    X-11Paths-Date. null if not needed.
+     * @param body        The HTTP request body. Null if not needed.
+     * @param utc         the Universal Coordinated Time for the X-11Paths-Date HTTP
+     *                    header
      * @return A map with the {@value AUTHORIZATION_HEADER_NAME}, the {@value
-     *         DATE_HEADER_NAME} and the {@value BODY_HASH_HEADER_NAME} headers
-     *         needed to be sent with a request to the API.
+     * DATE_HEADER_NAME} and the {@value BODY_HASH_HEADER_NAME} headers
+     * needed to be sent with a request to the API.
      * @throws java.io.UnsupportedEncodingException If {@value CHARSET_UTF_8} charset is
-     *         not supported.
+     *                                              not supported.
      */
     protected final Map<String, String> authenticationHeadersWithBody(String method, String querystring, Map<String, String> xHeaders, byte[] body, String utc) throws UnsupportedEncodingException {
 
@@ -278,21 +298,22 @@ abstract class BaseSdk {
 
     /**
      * Prepares and returns a string ready to be signed from the 11-paths specific HTTP headers received
+     *
      * @param xHeaders a non necessarily ordered map of the HTTP headers to be ordered without duplicates.
      * @return a String with the serialized headers, an empty string if no headers are passed, or null if there's a problem
      * such as non specific 11paths headers
      */
     protected String getSerializedHeaders(Map<String, String> xHeaders) {
-        if(xHeaders != null) {
-            TreeMap<String,String> sortedMap = new TreeMap<String,String>();
-            for(String key : xHeaders.keySet()) {
-                if(!key.toLowerCase().startsWith(X_11PATHS_HEADER_PREFIX.toLowerCase())) {
+        if (xHeaders != null) {
+            TreeMap<String, String> sortedMap = new TreeMap<String, String>();
+            for (String key : xHeaders.keySet()) {
+                if (!key.toLowerCase().startsWith(X_11PATHS_HEADER_PREFIX.toLowerCase())) {
                     System.out.println("Error serializing headers. Only specific " + X_11PATHS_HEADER_PREFIX + " headers need to be signed");
                 }
                 sortedMap.put(key.toLowerCase(), xHeaders.get(key));
             }
             StringBuilder serializedHeaders = new StringBuilder();
-            for(String key : sortedMap.keySet()) {
+            for (String key : sortedMap.keySet()) {
                 serializedHeaders.append(key).append(X_11PATHS_HEADER_SEPARATOR).append(sortedMap.get(key)).append(" ");
             }
             return serializedHeaders.toString().trim();
@@ -308,11 +329,12 @@ abstract class BaseSdk {
      * The params must be only those included in the body of the HTTP request
      * when its content type is application/x-www-urlencoded and must be
      * urldecoded.
+     *
      * @param params The params of an HTTP request.
      * @return A serialized representation of the params ready to be signed.
-     *         null if there are no valid params.
+     * null if there are no valid params.
      * @throws UnsupportedEncodingException If {@value CHARSET_UTF_8} charset is
-     *         not supported.
+     *                                      not supported.
      */
     protected String getSerializedParams(Map<String, String> params) throws UnsupportedEncodingException {
         String rv = null;
@@ -340,7 +362,6 @@ abstract class BaseSdk {
     }
 
     /**
-     *
      * @return a string representation of the current time in UTC to be used in a Date HTTP Header
      */
     protected final String getCurrentUTC() {

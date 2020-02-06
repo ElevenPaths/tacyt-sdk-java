@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Filter {
 
-    public static class Rule{
+    public static class Rule {
 
         private int weight;
         private String content;
@@ -73,11 +73,11 @@ public class Filter {
     private int numberOfSubscriptions;
     private List<String> groups = new ArrayList<String>();
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -153,7 +153,8 @@ public class Filter {
         this.groups = groups;
     }
 
-    public Filter() {}
+    public Filter() {
+    }
 
     public Filter(String id) {
         this.id = id;

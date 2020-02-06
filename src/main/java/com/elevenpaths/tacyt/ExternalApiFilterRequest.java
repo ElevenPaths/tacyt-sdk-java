@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 
-public class ExternalApiFilterRequest {
+public class ExternalApiFilterRequest extends ExternalApiRequest {
 
     private static final int FILTER_MAX_SIZE = 8000;
     private static final String ERROR_LIMIT_EXCEEDED = "Your filter definition exceeds the size limit of " + FILTER_MAX_SIZE + " characters. Please, shorten the description or split the rules in multiple filters.";
@@ -82,52 +82,43 @@ public class ExternalApiFilterRequest {
     }
 
     public static ExternalApiFilterRequest getCRUDrequest(RequestType requestType, Filter filter) throws IllegalArgumentException {
-
-        if(requestType != RequestType.CREATE && requestType != RequestType.READ
-                && requestType != RequestType.UPDATE && requestType != RequestType.DELETE){
+        if (requestType != RequestType.CREATE && requestType != RequestType.READ
+                && requestType != RequestType.UPDATE && requestType != RequestType.DELETE) {
             throw new IllegalArgumentException();
         }
 
         return new ExternalApiFilterRequest(requestType, filter, null, 0);
     }
 
-    public static ExternalApiFilterRequest getSearchPublicFilterRequest(String query, int page){
-
+    public static ExternalApiFilterRequest getSearchPublicFilterRequest(String query, int page) {
         return new ExternalApiFilterRequest(RequestType.SEARCH_PUBLIC_FILTER, null, query, page);
     }
 
-    public static ExternalApiFilterRequest getUnsubscribePublicFilterRequest(String filterId){
-
+    public static ExternalApiFilterRequest getUnsubscribePublicFilterRequest(String filterId) {
         return new ExternalApiFilterRequest(RequestType.UNSUBSCRIBE, null, filterId, 0);
     }
 
-    public static ExternalApiFilterRequest getSubscribePublicFilterRequest(String filterId){
-
+    public static ExternalApiFilterRequest getSubscribePublicFilterRequest(String filterId) {
         return new ExternalApiFilterRequest(RequestType.SUBSCRIBE, null, filterId, 0);
     }
 
-    public static ExternalApiFilterRequest getRSSrequest(String filterId){
-
+    public static ExternalApiFilterRequest getRSSrequest(String filterId) {
         return new ExternalApiFilterRequest(RequestType.GET_RSS, null, filterId, 0);
     }
 
-    public static ExternalApiFilterRequest getListOfDetections(String filterId, int page){
-
+    public static ExternalApiFilterRequest getListOfDetections(String filterId, int page) {
         return new ExternalApiFilterRequest(RequestType.LIST_DETECTIONS, null, filterId, page);
     }
 
-    public static ExternalApiFilterRequest getGroups(){
-
+    public static ExternalApiFilterRequest getGroups() {
         return new ExternalApiFilterRequest(RequestType.READ_GROUPS, null, null, 0);
     }
 
-    public static ExternalApiFilterRequest getListOfGroupDetections(String groupName, int page){
-
+    public static ExternalApiFilterRequest getListOfGroupDetections(String groupName, int page) {
         return new ExternalApiFilterRequest(RequestType.LIST_GROUP_DETECTIONS, null, groupName, page);
     }
 
-    public static ExternalApiFilterRequest getGroupRSS(String groupName){
-
+    public static ExternalApiFilterRequest getGroupRSS(String groupName) {
         return new ExternalApiFilterRequest(RequestType.GET_GROUP_RSS, null, groupName, 0);
     }
 
@@ -135,7 +126,7 @@ public class ExternalApiFilterRequest {
 
         String result = new Gson().toJsonTree(this).getAsJsonObject().toString();
 
-        if(result.length() > ExternalApiFilterRequest.FILTER_MAX_SIZE){
+        if (result.length() > ExternalApiFilterRequest.FILTER_MAX_SIZE) {
             throw new RuntimeException(ExternalApiFilterRequest.ERROR_LIMIT_EXCEEDED);
         }
 

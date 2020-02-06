@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -32,10 +32,12 @@ public class TacytResponse {
     private JsonObject data = null;
     private Error error = null;
 
-    public TacytResponse() {};
+    public TacytResponse() {
+    }
+
+    ;
 
     /**
-     *
      * @param json a json string received from one of the methods of the Path5 API
      * @throws JsonParseException
      * @throws JsonSyntaxException
@@ -55,13 +57,12 @@ public class TacytResponse {
             }
             if (json.getAsJsonObject().has("error")) {
                 this.error = new Error(json.getAsJsonObject().getAsJsonObject("error").get("code").getAsInt(),
-                            json.getAsJsonObject().getAsJsonObject("error").get("message").getAsString());
+                        json.getAsJsonObject().getAsJsonObject("error").get("message").getAsString());
             }
         }
     }
 
     /**
-     *
      * @return the data part of the API response
      */
     public JsonObject getData() {
@@ -69,7 +70,6 @@ public class TacytResponse {
     }
 
     /**
-     *
      * @param data the data to include in the API response
      */
     public void setData(JsonObject data) {
@@ -77,7 +77,6 @@ public class TacytResponse {
     }
 
     /**
-     *
      * @return the error part of the API response, consisting of an error code and an error message
      */
     public Error getError() {
@@ -85,7 +84,6 @@ public class TacytResponse {
     }
 
     /**
-     *
      * @param error an error to include in the API response
      */
     public void setError(Error error) {
@@ -93,20 +91,18 @@ public class TacytResponse {
     }
 
     /**
-     *
      * @return a JsonObject with the data and error parts set if they exist
      */
     public JsonObject toJSON() {
         JsonObject edition = new JsonObject();
-        if(data != null) {
+        if (data != null) {
             edition.add("data", data);
         }
-        if(error != null) {
+        if (error != null) {
             edition.add("error", getError().toJson());
         }
         return edition;
     }
-
 
 
 }

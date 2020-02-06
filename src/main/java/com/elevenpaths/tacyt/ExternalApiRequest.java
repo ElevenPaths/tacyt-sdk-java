@@ -17,39 +17,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
-import java.util.Set;
+import com.google.gson.Gson;
 
-public class ExternalApiUploadURLRequest extends ExternalApiRequest {
+import java.io.UnsupportedEncodingException;
 
+public class ExternalApiRequest {
 
-    public final static String FIELD_APPS = "apps";
-
-    private Set<String> urls;
-    private Set<String> tagNames;
-
-    public ExternalApiUploadURLRequest(Set<String> urls, Set<String> tagNames) {
-        this.urls = urls;
-        this.tagNames = tagNames;
-    }
-
-    public ExternalApiUploadURLRequest(Set<String> urls) {
-        this.urls = urls;
-        this.tagNames = null;
-    }
-
-    public Set<String> getUrls() {
-        return urls;
-    }
-
-    public void setUrls(Set<String> urls) {
-        this.urls = urls;
-    }
-
-    public Set<String> getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(Set<String> tagNames) {
-        this.tagNames = tagNames;
+    public String getJsonEncode() throws UnsupportedEncodingException {
+        return new Gson().toJsonTree(this).getAsJsonObject().toString();
     }
 }

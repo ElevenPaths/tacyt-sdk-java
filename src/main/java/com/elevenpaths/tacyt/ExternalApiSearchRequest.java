@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -17,9 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
-import java.io.UnsupportedEncodingException;
-
-public class ExternalApiSearchRequest {
+public class ExternalApiSearchRequest extends ExternalApiRequest {
 
     private String query;
     private int numberPage;
@@ -81,32 +79,25 @@ public class ExternalApiSearchRequest {
         this.maxResults = maxResults > 0 ? maxResults : 20;
         this.grouped = grouped;
 
-        if(outputFields != null && outputFields.length > 0) {
+        if (outputFields != null && outputFields.length > 0) {
             StringBuilder stringBuilder = new StringBuilder();
-            for(String field : outputFields){
+            for (String field : outputFields) {
                 stringBuilder.append(field + ",");
             }
             this.outputFields = stringBuilder.toString();
         }
     }
 
-    public String getJsonEncode() throws UnsupportedEncodingException {
-
-        return Utils.getGsonParser().toJsonTree(this).getAsJsonObject().toString();
-    }
-
     public static ExternalApiSearchRequest getFromJson(String json) {
-
         ExternalApiSearchRequest result;
 
         try {
             result = Utils.getGsonParser().fromJson(json, ExternalApiSearchRequest.class);
-
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException();
         }
 
-        if(result.getQuery() == null || result.getQuery().isEmpty()){
+        if (result.getQuery() == null || result.getQuery().isEmpty()) {
             throw new IllegalArgumentException();
         }
 
