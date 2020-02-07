@@ -1,4 +1,4 @@
-/*Path5 Java SDK - Set of  reusable classes to  allow developers integrate Path5 on their applications.
+/*Tacyt Java SDK - Set of  reusable classes to  allow developers integrate Tacyt on their applications.
 Copyright (C) 2013 Eleven Paths
 
 This library is free software; you can redistribute it and/or
@@ -14,6 +14,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
+
 package com.elevenpaths.tacyt;
 
 import com.google.gson.*;
@@ -82,9 +83,9 @@ public class Utils {
         if (str != null && start < str.length() && end <= str.length() && start < end) {
 
             int index = str.lastIndexOf(' ', end);
-            if(index != -1){
+            if (index != -1) {
                 result = str.substring(start, index);
-            }else {
+            } else {
                 result = str.substring(start, end);
             }
 
@@ -126,8 +127,9 @@ public class Utils {
     // **************************
 
     private static Gson gsonParser = null;
+
     public static Gson getGsonParser() {
-        if(Utils.gsonParser == null){
+        if (Utils.gsonParser == null) {
             Utils.gsonParser = new GsonBuilder()
                     .registerTypeAdapter(Date.class, new DateSerializer())
                     .registerTypeAdapter(Date.class, new DateDeserializer()).create();
@@ -186,10 +188,11 @@ public class Utils {
 
     /**
      * Returns a SimpleDateFormat for the format "yyyy-MM-dd HH:mm:ss"
+     *
      * @return
      */
-    public static SimpleDateFormat getDefaultSDF(){
-        if(defaultSDF == null) {
+    public static SimpleDateFormat getDefaultSDF() {
+        if (defaultSDF == null) {
             defaultSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//, Configuration.DEFAULT_LOCALE);
             defaultSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
             defaultSDF.setLenient(false);
@@ -199,10 +202,11 @@ public class Utils {
 
     /**
      * Returns a SimpleDateFormat for the format "yyyy-MM-dd'T'HH:mm:ss'Z'"
+     *
      * @return
      */
-    public static SimpleDateFormat getSolrSDF(){
-        if(solrSDF == null) {
+    public static SimpleDateFormat getSolrSDF() {
+        if (solrSDF == null) {
             solrSDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");//, Configuration.DEFAULT_LOCALE);
             solrSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
@@ -213,12 +217,12 @@ public class Utils {
      * Modify a date adding/subtracting a given time
      *
      * @param date Date in which the add/subtract will be applied
-     * @param add TRUE if add, FALSE if subtract
+     * @param add  TRUE if add, FALSE if subtract
      * @param unit Calendar.UNIT, examples: Calendar.SECOND, Calendar.MINUTE...
      * @param time Time to add/subtract
      * @return
      */
-    public static Date addSubtractTimeToDate(Date date, boolean add, int unit, int time){
+    public static Date addSubtractTimeToDate(Date date, boolean add, int unit, int time) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -228,6 +232,7 @@ public class Utils {
     }
 
     private static SimpleDateFormat dateFormatPresentation = null;
+
     public static SimpleDateFormat getDateFormatPresentation() {
         if (dateFormatPresentation == null) {
             dateFormatPresentation = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//, Configuration.DEFAULT_LOCALE);
