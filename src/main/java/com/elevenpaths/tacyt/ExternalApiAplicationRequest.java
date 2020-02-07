@@ -38,7 +38,7 @@ public class ExternalApiAplicationRequest extends ExternalApiRequest {
     private String developerAddress;
     private String developerPrivacy;
     private Date uploadDate;
-    private String genreNames;
+    private String[] genreNames;
     private Integer numDownloads;
     private Float price;
     private String currencyCode;
