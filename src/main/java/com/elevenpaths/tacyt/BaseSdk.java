@@ -262,7 +262,7 @@ abstract class BaseSdk {
 
         String bodyHash = null;
         if (body != null) {
-            bodyHash = DigestUtils.shaHex(body);
+            bodyHash = DigestUtils.sha1Hex(body);
             if (xHeaders == null) {
                 xHeaders = new HashMap<String, String>();
 

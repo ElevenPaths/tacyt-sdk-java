@@ -52,6 +52,7 @@ public class ExternalApiAplicationRequest extends ExternalApiRequest {
     private String directDownloadURL;
     private String linkToOfficialMarket;
     private Date findDate;
+    private Date deadDate;
 
     public ExternalApiAplicationRequest(String uniqueOriginId, String uniqueVersionId, String platform, String origin, String title, String appURL) {
         this.uniqueOriginId = uniqueOriginId;
@@ -198,11 +199,11 @@ public class ExternalApiAplicationRequest extends ExternalApiRequest {
         this.uploadDate = uploadDate;
     }
 
-    public String getGenreNames() {
+    public String[] getGenreNames() {
         return genreNames;
     }
 
-    public void setGenreNames(String genreNames) {
+    public void setGenreNames(String[] genreNames) {
         this.genreNames = genreNames;
     }
 
@@ -308,5 +309,13 @@ public class ExternalApiAplicationRequest extends ExternalApiRequest {
 
     public void setFindDate(Date findDate) {
         this.findDate = findDate;
+    }
+
+    public Date getDeadDate() {
+        return deadDate;
+    }
+
+    public void setDeadDate(Date deadDate) {
+        this.deadDate = deadDate;
     }
 }
