@@ -17,6 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -56,8 +57,17 @@ public class TacytResponse {
                 this.data = json.getAsJsonObject().getAsJsonObject("data");
             }
             if (json.getAsJsonObject().has("error")) {
+                Object[] args = null;
+                if (json.getAsJsonObject().getAsJsonObject("error").get("args") != null) {
+                    JsonArray jsonArgs = json.getAsJsonObject().getAsJsonObject("error").get("args").getAsJsonArray();
+                    args = new Object[jsonArgs.size()];
+                    for (int i=0; i < jsonArgs.size(); i++) {
+                        args[i] = jsonArgs.get(i).getAsString();
+                    }
+                }
+
                 this.error = new Error(json.getAsJsonObject().getAsJsonObject("error").get("code").getAsInt(),
-                        json.getAsJsonObject().getAsJsonObject("error").get("message").getAsString());
+                        json.getAsJsonObject().getAsJsonObject("error").get("message").getAsString(), args);
             }
         }
     }

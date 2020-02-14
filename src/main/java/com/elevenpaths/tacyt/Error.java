@@ -17,16 +17,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class Error {
 
     private int code;
     private String message;
+    private Object[] args;
 
     public Error(int code, String msg) {
         this.code = code;
         this.message = msg;
+    }
+
+    public Error(int code, String msg, Object[] args) {
+        this.code = code;
+        this.message = msg;
+        this.args = args;
     }
 
     public int getCode() {
@@ -37,6 +46,10 @@ public class Error {
         return message;
     }
 
+    public Object[] getArgs() {
+        return args;
+    }
+
     /**
      * @return a JsonObject with the code and message of the error
      */
@@ -44,6 +57,11 @@ public class Error {
         JsonObject error = new JsonObject();
         error.addProperty("code", code);
         error.addProperty("message", message);
+        JsonArray args = new JsonArray();
+        for (Object obj : this.args) {
+            args.add(new JsonPrimitive(obj.toString()));
+        }
+        error.add("args", args);
         return error;
     }
 
