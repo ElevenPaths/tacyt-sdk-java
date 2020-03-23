@@ -24,6 +24,6 @@ import java.io.UnsupportedEncodingException;
 public class ExternalApiRequest {
 
     public String getJsonEncode() throws UnsupportedEncodingException {
-        return new Gson().toJsonTree(this).getAsJsonObject().toString();
+        return Utils.getGsonParser().toJsonTree(this).getAsJsonObject().toString();
     }
 }

@@ -59,10 +59,15 @@ public class TacytResponse {
             if (json.getAsJsonObject().has("error")) {
                 Object[] args = null;
                 if (json.getAsJsonObject().getAsJsonObject("error").get("args") != null) {
-                    JsonArray jsonArgs = json.getAsJsonObject().getAsJsonObject("error").get("args").getAsJsonArray();
-                    args = new Object[jsonArgs.size()];
-                    for (int i=0; i < jsonArgs.size(); i++) {
-                        args[i] = jsonArgs.get(i).getAsString();
+                    if (json.getAsJsonObject().getAsJsonObject("error").get("args").isJsonArray()) {
+                        JsonArray jsonArgs = json.getAsJsonObject().getAsJsonObject("error").get("args").getAsJsonArray();
+                        args = new Object[jsonArgs.size()];
+                        for (int i = 0; i < jsonArgs.size(); i++) {
+                            args[i] = jsonArgs.get(i).getAsString();
+                        }
+                    } else if (json.getAsJsonObject().getAsJsonObject("error").get("args").isJsonPrimitive()) {
+                        args = new Object[1];
+                        args[0] = json.getAsJsonObject().getAsJsonObject("error").get("args").getAsJsonPrimitive().getAsString();
                     }
                 }
 

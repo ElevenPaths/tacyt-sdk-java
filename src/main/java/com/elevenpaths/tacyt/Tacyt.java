@@ -85,7 +85,7 @@ public class Tacyt extends BaseSdk {
                 }
             }
 
-            if (HTTP_METHOD_POST.equals(method)) {
+            if (HTTP_METHOD_POST.equals(method) || HTTP_METHOD_PUT.equals(method)) {
                 if (body != null && file == null) {
                     byte[] bodyBytes = body.getBytes(CHARSET_UTF_8);
                     theConnection.setRequestProperty(HTTP_HEADER_CONTENT_TYPE, HTTP_HEADER_CONTENT_TYPE_JSON);

@@ -54,13 +54,14 @@ public class ExternalApiAplicationRequest extends ExternalApiRequest {
     private Date findDate;
     private Date deadDate;
 
-    public ExternalApiAplicationRequest(String uniqueOriginId, String uniqueVersionId, String platform, String origin, String title, String appURL) {
+    public ExternalApiAplicationRequest(String uniqueOriginId, String uniqueVersionId, String platform, String origin, String title, String appURL, Date findDate) {
         this.uniqueOriginId = uniqueOriginId;
         this.uniqueVersionId = uniqueVersionId;
         this.platform = platform;
         this.origin = origin;
         this.title = title;
         this.appURL = appURL;
+        this.findDate = findDate;
     }
 
     public String getUniqueOriginId() {
