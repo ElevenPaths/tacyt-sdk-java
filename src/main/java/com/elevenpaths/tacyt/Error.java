@@ -57,11 +57,13 @@ public class Error {
         JsonObject error = new JsonObject();
         error.addProperty("code", code);
         error.addProperty("message", message);
-        JsonArray args = new JsonArray();
-        for (Object obj : this.args) {
-            args.add(new JsonPrimitive(obj.toString()));
+        if (this.args != null) {
+            JsonArray args = new JsonArray();
+            for (Object obj : this.args) {
+                args.add(new JsonPrimitive(obj.toString()));
+            }
+            error.add("args", args);
         }
-        error.add("args", args);
         return error;
     }
 
