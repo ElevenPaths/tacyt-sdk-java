@@ -17,7 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package com.elevenpaths.tacyt;
 
-import com.google.gson.JsonElement;
+import com.google.gson.*;
 import com.ning.http.util.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -126,8 +126,17 @@ abstract class BaseSdk {
         return HTTP(URL, HTTP_METHOD_PUT, headers, body, null);
     }
 
-    protected JsonElement HTTP_POST_FILE(String URL, Map<String, String> headers, File file, String tagName) {
-        return HTTP(URL, HTTP_METHOD_POST, headers, tagName, file);
+    protected JsonElement HTTP_POST_FILE(String URL, Map<String, String> headers, File file, String tagName, Date sendToAVDate) {
+
+        JsonObject jo = new JsonObject();
+        if (tagName != null && !tagName.isEmpty()) {
+            jo.addProperty("tagName", tagName);
+        }
+        if (sendToAVDate != null) {
+            jo.addProperty("sendToAVDate", Utils.getSolrSDF().format(sendToAVDate));
+        }
+
+        return HTTP(URL, HTTP_METHOD_POST, headers, jo.toString(), file);
     }
 
     protected TacytResponse HTTP_GET_proxy(String url) {
