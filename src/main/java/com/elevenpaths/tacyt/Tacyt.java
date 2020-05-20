@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 package com.elevenpaths.tacyt;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -107,9 +108,15 @@ public class Tacyt extends BaseSdk {
                     PrintWriter writer = new PrintWriter(os, true);
 
                     if (body != null) {
-                        writer.append("--" + boundary).append(CRLF);
-                        writer.append("Content-Disposition: form-data; name=\"tagName\"").append(CRLF).append(CRLF);
-                        writer.append(body).append(CRLF);
+
+                        JsonParser jsonParser = new JsonParser();
+                        JsonObject jsonObj = jsonParser.parse(body.toString()).getAsJsonObject();
+
+                        for (Map.Entry entry : jsonObj.entrySet()) {
+                            writer.append("--" + boundary).append(CRLF);
+                            writer.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"").append(CRLF).append(CRLF);
+                            writer.append(entry.getValue().toString().replaceAll("\"", "")).append(CRLF);
+                        }
                     }
 
                     writer.append("--" + boundary).append(CRLF);
@@ -472,11 +479,11 @@ public class Tacyt extends BaseSdk {
         }
     }
 
-    public TacytResponse uploadApp(File file, String tagName) {
+    public TacytResponse uploadApp(File file, String tagName, Date sendToAVDate) {
         try {
             Map<String, String> headers = new HashMap<>();
             headers.put(FILE_HASH_HEADER_NAME, DigestUtils.sha1Hex(Files.readAllBytes(file.toPath())));
-            return new TacytResponse(HTTP_POST_FILE(API_HOST + API_UPLOAD_URL, authenticationHeadersWithBody(HTTP_METHOD_POST, API_UPLOAD_URL, headers, ""), file, tagName));
+            return new TacytResponse(HTTP_POST_FILE(API_HOST + API_UPLOAD_URL, authenticationHeadersWithBody(HTTP_METHOD_POST, API_UPLOAD_URL, headers, ""), file, tagName, sendToAVDate));
         } catch (UnsupportedEncodingException e) {
             return null;
         } catch (IOException e) {
