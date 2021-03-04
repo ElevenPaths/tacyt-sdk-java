@@ -33,7 +33,7 @@ import java.util.*;
 
 public class Tacyt extends BaseSdk {
 
-    protected static final String API_VERSION = "2.9";
+    protected static final String API_VERSION = "2.10";
     protected static final String API_SEARCH_URL = "/api/" + API_VERSION + "/search";
     protected static final String API_TAGS_URL = "/api/" + API_VERSION + "/tags";
     protected static final String API_DETAILS_URL = "/api/" + API_VERSION + "/details";
